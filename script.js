@@ -9,42 +9,46 @@
   const STORAGE_KEY = 'budget_tracker_transactions';
 
   const CATEGORY_COLORS = {
-    Food:            '#f97316',
-    Transport:       '#3b82f6',
-    Shopping:        '#ec4899',
-    Bills:           '#eab308',
-    Entertainment:   '#8b5cf6',
-    Health:          '#14b8a6',
-    Education:       '#06b6d4',
+    Food: '#f97316',
+    Transport: '#3b82f6',
+    Shopping: '#ec4899',
+    Bills: '#eab308',
+    Entertainment: '#8b5cf6',
+    Health: '#14b8a6',
+    Education: '#06b6d4',
     'Other Expense': '#6b7280',
-    Salary:          '#22c55e',
-    Freelance:       '#10b981',
-    Investment:      '#0ea5e9',
-    Gift:            '#f472b6',
-    'Other Income':  '#a3e635',
+    Salary: '#22c55e',
+    Freelance: '#10b981',
+    Investment: '#0ea5e9',
+    Gift: '#f472b6',
+    'Other Income': '#a3e635',
   };
 
   // ── DOM References ─────────────────────────────────
   const $ = (sel) => document.querySelector(sel);
-  const form            = $('#transaction-form');
-  const inputName       = $('#input-name');
-  const inputAmount     = $('#input-amount');
-  const inputCategory   = $('#input-category');
-  const formError       = $('#form-error');
-  const btnTypeIncome   = $('#btn-type-income');
-  const btnTypeExpense  = $('#btn-type-expense');
-  const totalBalanceEl  = $('#total-balance');
-  const totalIncomeEl   = $('#total-income');
-  const totalExpenseEl  = $('#total-expense');
-  const historyList     = $('#history-list');
-  const emptyState      = $('#empty-state');
-  const chartContainer  = $('#chart-container');
-  const noChartData     = $('#no-chart-data');
-  const btnClearAll     = $('#btn-clear-all');
-  const modalOverlay    = $('#modal-overlay');
-  const modalCancel     = $('#modal-cancel');
-  const modalConfirm    = $('#modal-confirm');
-  const toastContainer  = $('#toast-container');
+  const form = $('#transaction-form');
+  const inputName = $('#input-name');
+  const inputAmount = $('#input-amount');
+  const inputCategory = $('#input-category');
+  const formError = $('#form-error');
+  const btnTypeIncome = $('#btn-type-income');
+  const btnTypeExpense = $('#btn-type-expense');
+  const totalBalanceEl = $('#total-balance');
+  const totalIncomeEl = $('#total-income');
+  const totalExpenseEl = $('#total-expense');
+  const historyList = $('#history-list');
+  const emptyState = $('#empty-state');
+  const chartContainer = $('#chart-container');
+  const noChartData = $('#no-chart-data');
+  const btnClearAll = $('#btn-clear-all');
+  const modalOverlay = $('#modal-overlay');
+  const modalCancel = $('#modal-cancel');
+  const modalConfirm = $('#modal-confirm');
+  const btnViewCredits = $('#btn-view-credits');
+  const creditsModal = $('#credits-modal-overlay');
+  const creditsCloseIcon = $('#credits-close-icon');
+  const creditsCloseBtn = $('#credits-close-btn');
+  const toastContainer = $('#toast-container');
 
   // ── State ──────────────────────────────────────────
   let transactions = [];
@@ -213,13 +217,13 @@
 
   // ── Update Dashboard Cards ─────────────────────────
   function updateSummary() {
-    const income  = transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+    const income = transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
     const expense = transactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
     const balance = income - expense;
 
-    totalBalanceEl.textContent  = (balance < 0 ? '-' : '') + formatCurrency(balance);
-    totalIncomeEl.textContent   = formatCurrency(income);
-    totalExpenseEl.textContent  = formatCurrency(expense);
+    totalBalanceEl.textContent = (balance < 0 ? '-' : '') + formatCurrency(balance);
+    totalIncomeEl.textContent = formatCurrency(income);
+    totalExpenseEl.textContent = formatCurrency(expense);
   }
 
   // ── Render History ─────────────────────────────────
@@ -240,7 +244,7 @@
       item.style.animationDelay = `${i * 0.04}s`;
 
       const isIncome = t.type === 'income';
-      const dateStr  = new Date(t.date).toLocaleDateString('en-IN', {
+      const dateStr = new Date(t.date).toLocaleDateString('en-IN', {
         day: 'numeric', month: 'short', year: 'numeric',
       });
 
@@ -366,14 +370,29 @@
   modalCancel.addEventListener('click', hideModal);
   modalConfirm.addEventListener('click', clearAll);
 
-  modalOverlay.addEventListener('click', (e) => {
-    if (e.target === modalOverlay) hideModal();
+  btnViewCredits.addEventListener('click', () => {
+    creditsModal.classList.add('show');
+  });
+
+  creditsCloseIcon.addEventListener('click', () => {
+    creditsModal.classList.remove('show');
+  });
+
+  function hideCreditsModal() {
+    creditsModal.classList.remove('show');
+  }
+
+  creditsCloseBtn.addEventListener('click', hideCreditsModal);
+
+  creditsModal.addEventListener('click', (e) => {
+    if (e.target === creditsModal) hideCreditsModal();
   });
 
   // Close modal on Escape
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modalOverlay.classList.contains('show')) {
-      hideModal();
+    if (e.key === 'Escape') {
+      if (modalOverlay.classList.contains('show')) hideModal();
+      if (creditsModal.classList.contains('show')) hideCreditsModal();
     }
   });
 
