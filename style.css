@@ -43,7 +43,15 @@ html {
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  background: var(--bg-base);
+  background: 
+    linear-gradient(
+      180deg,
+      rgba(90, 90, 110, 0.18) 0%,
+      rgba(60, 60, 75, 0.22) 100%
+    ),
+    radial-gradient(circle at 20% 20%, #23232a 0%, var(--bg-base) 45%),
+    radial-gradient(circle at 80% 0%, rgba(107,138,205,0.05), transparent 50%),
+    var(--bg-base);
   color: var(--text-primary);
   min-height: 100vh;
   line-height: 1.6;
@@ -87,6 +95,8 @@ header p {
 /* ───────────── Card ───────────── */
 .card {
   background: var(--bg-surface);
+  backdrop-filter: blur(6px);
+  background: linear-gradient(145deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)), var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 20px;
@@ -94,8 +104,10 @@ header p {
 }
 
 .card:hover {
-  background: var(--bg-raised);
-  border-color: var(--border-light);
+  background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015)), var(--bg-raised);
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
 }
 
 .card-label {
@@ -247,6 +259,8 @@ header p {
   border: none;
   border-radius: var(--radius-sm);
   background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), #4f6db8);
+  box-shadow: 0 4px 14px rgba(107,138,205,0.35);
   color: #fff;
   font-family: inherit;
   font-size: 0.88rem;
@@ -256,8 +270,9 @@ header p {
 }
 
 .btn-submit:hover {
-  opacity: 0.9;
-  box-shadow: var(--shadow);
+  opacity: 1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(107,138,205,0.45);
 }
 
 .btn-submit:active {
@@ -387,6 +402,7 @@ header p {
   gap: 12px;
   padding: 12px 14px;
   background: var(--bg-surface);
+  backdrop-filter: blur(4px);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   transition: background var(--transition);
@@ -394,6 +410,8 @@ header p {
 
 .history-item:hover {
   background: var(--bg-raised);
+  transform: translateX(4px);
+  border-color: var(--accent);
 }
 
 .history-item .indicator {
@@ -706,7 +724,8 @@ header p {
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: var(--shadow);
-  user-select: none;
+  position: relative;
+  overflow: hidden;
 }
 
 .dev-chip:hover {
@@ -714,6 +733,26 @@ header p {
   border-color: var(--accent);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.dev-chip::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(120deg, transparent, rgba(107,138,205,0.4), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.dev-chip:hover::before {
+  opacity: 1;
+  animation: chipGlow 1.2s linear infinite;
+}
+
+@keyframes chipGlow {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 .dev-avatar {
